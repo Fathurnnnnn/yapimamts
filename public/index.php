@@ -14,6 +14,7 @@ $page = $_GET['page'] ?? 'beranda';
 // Daftar halaman yang diizinkan dan file-nya di folder 'templates'
 $allowed_pages = [
     'beranda' => 'beranda.php',
+    'pendaftaran' => 'pendaftaran_form.php',
     // Nanti kita akan tambahkan halaman lain di sini
     // 'pendaftaran' => 'form_pendaftaran.php',
     // 'detail_berita' => 'detail_berita.php',

@@ -1,14 +1,15 @@
 <?php
-// Pastikan kita berada di folder proyek yang benar
-// Ini memanggil file autoload.php dari dalam folder 'vendor'
-require __DIR__ . '/vendor/autoload.php';
+// Di dalam 'src/config.php'
 
-// Menggunakan library Dotenv untuk memuat file .env yang sudah kita buat
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+// Memanggil autoloader dari Composer
+// __DIR__ adalah 'src', jadi kita harus naik satu level ('../') untuk menemukan folder 'vendor'
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// Memberitahu Dotenv untuk mencari file .env di direktori root (satu level di atas 'src')
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 // Mengambil variabel konfigurasi dari .env menggunakan $_ENV
-// Variabel ini sekarang aman dan tidak tersimpan di GitHub
 $host = $_ENV['DB_HOST'];
 $user = $_ENV['DB_USER'];
 $pass = $_ENV['DB_PASS'];
@@ -21,8 +22,4 @@ $koneksi = mysqli_connect($host, $user, $pass, $db_name);
 if (!$koneksi) {
     die("Koneksi ke database gagal: " . mysqli_connect_error());
 }
-?>
-
-// Set timezone
-date_default_timezone_set('Asia/Jakarta');
 ?>
