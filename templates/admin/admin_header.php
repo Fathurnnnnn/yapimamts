@@ -1,9 +1,9 @@
 <?php
-// File ini akan dipanggil di setiap halaman admin
-require_once '../config.php';
-// Keamanan: Cek apakah admin sudah login
-if (!isset($_SESSION['admin_logged_in'])) {
-    header('Location: login.php');
+// File: templates/admin/admin_header.php
+
+// Keamanan tambahan: pastikan hanya yang sudah login bisa melihat ini
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header('Location: index.php?page=admin_login');
     exit();
 }
 ?>
@@ -11,75 +11,33 @@ if (!isset($_SESSION['admin_logged_in'])) {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo isset($page_title) ? $page_title : 'Admin Dasbor'; ?> - MTS YAPIMA</title>
-    <link rel="stylesheet" href="../css/style.css">
-    
-    <!-- ======================================================= -->
-    <!-- ===== CSS MASTER UNTUK SELURUH ADMIN PANEL ===== -->
-    <!-- ======================================================= -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - MTS YAPIMA</title>
     <style>
-        body { background-color: #f8f9fa; }
-        
-        /* HEADER UTAMA ADMIN */
-        .admin-global-header {
-            background-color: var(--secondary-color); color: white; padding: 1rem 0;
-            position: fixed; width: 100%; top: 0; left: 0; z-index: 1001;
-        }
-        .admin-global-header .container { display: flex; justify-content: space-between; align-items: center; }
-        .admin-title { font-size: 1.2rem; font-weight: bold; }
-        .admin-global-header nav a { color: #ccc; text-decoration: none; margin-left: 20px; }
-        .admin-global-header nav a:hover { color: white; }
-        .logout-btn { background-color: var(--primary-color); padding: 8px 12px; border-radius: 5px; }
-
-        /* KONTEN UTAMA & JUDUL HALAMAN */
-        .admin-content {
-            padding: 100px 20px 40px; margin: auto; max-width: 1100px;
-        }
-        .page-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px; border-bottom: 1px solid #ddd; padding-bottom: 20px;
-        }
-        .page-header h2 { text-align: left; margin: 0; font-size: 2rem; }
-        
-        /* STYLING UNTUK TABEL (Daftar Berita & Pendaftar) */
-        .table-wrapper { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 15px; border: 1px solid #ddd; vertical-align: middle; text-align: left; }
-        th { background-color: #f2f2f2; font-weight: bold; }
-        td img { width: 100px; height: auto; border-radius: 4px; }
-        
-        /* STYLING UNTUK FORM (Tambah Berita & Info PPDB) */
-        .form-group { margin-bottom: 20px; }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            font-size: 1rem;
-        }
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        .form-group textarea { height: 250px; }
-        .btn { display: inline-block; padding: 10px 20px; background: var(--primary-color); color: white; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; }
-        
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f7f6; }
+        .admin-container { display: flex; }
+        .sidebar { width: 220px; background-color: #2c3e50; color: white; min-height: 100vh; padding: 20px; }
+        .sidebar h3 { text-align: center; }
+        .sidebar ul { list-style: none; padding: 0; }
+        .sidebar ul li a { display: block; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; margin-bottom: 5px; }
+        .sidebar ul li a:hover, .sidebar ul li a.active { background-color: #3498db; }
+        .main-content { flex-grow: 1; padding: 20px; }
+        .header-info { display: flex; justify-content: space-between; align-items: center; background-color: white; padding: 10px 20px; border-bottom: 1px solid #ddd; margin-bottom: 20px;}
     </style>
 </head>
 <body>
-    <header class="admin-global-header">
-        <div class="container">
-            <span class="admin-title">ADMIN PANEL MTS YAPIMA</span>
-            <nav>
-                <a href="index.php">Berita</a>
-                <a href="ppdb.php">Info PPDB</a>
-                <a href="data_pendaftar.php">Data Pendaftar</a>
-                <a href="logout.php" class="logout-btn">Logout</a>
-            </nav>
+<div class="admin-container">
+    <div class="sidebar">
+        <h3>ADMIN PANEL</h3>
+        <ul>
+            <li><a href="index.php?page=admin_dashboard">Dashboard</a></li>
+            <li><a href="index.php?page=admin_data_pendaftar">Data Pendaftar</a></li>
+            <!-- Tambahkan menu admin lain di sini -->
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="header-info">
+            <div>Selamat Datang, <strong><?php echo htmlspecialchars($_SESSION['admin_username']); ?></strong>!</div>
+            <a href="index.php?page=admin_logout" style="background-color:#e74c3c; color:white; padding: 8px 12px; text-decoration:none; border-radius:4px;">Logout</a>
         </div>
-    </header>
-
-    <main class="admin-content">
-        <!-- Konten dari setiap halaman akan dimulai di sini -->
+        <!-- Konten halaman akan dimulai di sini -->
