@@ -32,6 +32,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
         <ul>
             <li><a href="index.php?page=admin_dashboard">Dashboard</a></li>
             <li><a href="index.php?page=admin_data_pendaftar">Data Pendaftar</a></li>
+            <li><a href="index.php?page=admin_berita_index">Manajemen Berita</a></li>
             <!-- Tambahkan menu admin lain di sini -->
         </ul>
     </div>

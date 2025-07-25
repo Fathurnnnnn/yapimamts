@@ -18,8 +18,9 @@ html <link rel="stylesheet" href="style.css">
                 <li><a href="index.php#visi-misi">Visi & Misi</a></li>
                 <li><a href="index.php#fasilitas">Fasilitas</a></li>
                 <li><a href="index.php#ekskul">Ekskul</a></li>
-                <li><a href="index.php#berita">Berita</a></li>
+                <li><a href="index.php?page=berita_list">Berita</a></li>
                 <li><a href="index.php#lokasi">Lokasi</a></li>
+                
                 <!-- Tombol PPDB duplikat sudah DIHAPUS dari sini -->
             </ul>
         </nav>

@@ -1,44 +1,18 @@
 <?php
-// BAGIAN LOGIKA PEMROSESAN FORM
-// Variabel $koneksi sudah tersedia dari public/index.php, jadi tidak perlu require 'config.php' lagi.
+use App\models\Pendaftar;
 
-// Hanya jalankan kode pemrosesan jika form dikirim (metode POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Ambil semua data dari form untuk keamanan
-    $nama_lengkap = mysqli_real_escape_string($koneksi, $_POST['nama_lengkap']);
-    $nisn = mysqli_real_escape_string($koneksi, $_POST['nisn']);
-    $tempat_lahir = mysqli_real_escape_string($koneksi, $_POST['tempat_lahir']);
-    $tanggal_lahir = mysqli_real_escape_string($koneksi, $_POST['tanggal_lahir']);
-    $jenis_kelamin = mysqli_real_escape_string($koneksi, $_POST['jenis_kelamin']);
-    $agama = mysqli_real_escape_string($koneksi, $_POST['agama']);
-    $alamat = mysqli_real_escape_string($koneksi, $_POST['alamat']);
-    $sekolah_asal = mysqli_real_escape_string($koneksi, $_POST['sekolah_asal']);
-    $nama_ayah = mysqli_real_escape_string($koneksi, $_POST['nama_ayah']);
-    $telepon_ayah = mysqli_real_escape_string($koneksi, $_POST['telepon_ayah']);
-    $nama_ibu = mysqli_real_escape_string($koneksi, $_POST['nama_ibu']);
-    $telepon_ibu = mysqli_real_escape_string($koneksi, $_POST['telepon_ibu']);
+    $result = Pendaftar::create($_POST);
 
-    // Siapkan query untuk menyimpan data (Menggunakan variabel $koneksi)
-    // Perhatikan: Jika sebelumnya Anda menggunakan $conn, sekarang harus diganti menjadi $koneksi
-    $query = "INSERT INTO calon_siswa 
-              (nama_lengkap, nisn, tempat_lahir, tanggal_lahir, jenis_kelamin, agama, alamat, sekolah_asal, nama_ayah, telepon_ayah, nama_ibu, telepon_ibu) 
-              VALUES 
-              ('$nama_lengkap', '$nisn', '$tempat_lahir', '$tanggal_lahir', '$jenis_kelamin', '$agama', '$alamat', '$sekolah_asal', '$nama_ayah', '$telepon_ayah', '$nama_ibu', '$telepon_ibu')";
-
-    $result = mysqli_query($koneksi, $query);
-
-    // Eksekusi query dan berikan pesan
     if ($result) {
-        // Jika berhasil, tampilkan pesan dan arahkan ke halaman utama
         echo "<script>
                 alert('Pendaftaran berhasil dikirim! Terima kasih.');
                 window.location.href = 'index.php?page=beranda';
               </script>";
-        exit(); // Penting untuk menghentikan eksekusi script setelah redirect
+        exit();
     } else {
-        // Jika gagal, tampilkan pesan error
         echo "<script>
-                alert('Maaf, terjadi kesalahan. Silakan coba lagi. Error: " . mysqli_error($koneksi) . "');
+                alert('Maaf, terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
                 window.history.back();
               </script>";
         exit();
@@ -46,33 +20,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!-- BAGIAN TAMPILAN FORM HTML -->
-<!-- Pastikan action pada form sudah benar -->
-<form method="POST" action="index.php?page=pendaftaran">
-    
+<!-- --- BAGIAN TAMPILAN HTML --- -->
+<div style="max-width: 700px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
     <h2>Formulir Pendaftaran Siswa Baru</h2>
     <p>Silakan isi data di bawah ini dengan lengkap dan benar.</p>
-
-    <!-- 
-    ====================================================================
-    !!! PENTING: PASTE KODE HTML FORMULIR LAMA ANDA DI SINI !!!
-    (Mulai dari input nama lengkap, NISN, sampai tombol submit)
-    ====================================================================
-    -->
-
-    <!-- Contoh: -->
-    <div class="form-group">
-        <label for="nama_lengkap">Nama Lengkap:</label>
-        <input type="text" id="nama_lengkap" name="nama_lengkap" required>
-    </div>
-
-    <div class="form-group">
-        <label for="nisn">NISN:</label>
-        <input type="text" id="nisn" name="nisn" required>
-    </div>
-
-    <!-- ... (lanjutkan dengan field form lainnya) ... -->
-
-    <button type="submit">Daftar Sekarang</button>
-
-</form>
+    <hr>
+    
+    <form method="POST" action="index.php?page=pendaftaran">
+        <p>
+            <label for="nama_lengkap">Nama Lengkap:</label><br>
+            <input type="text" id="nama_lengkap" name="nama_lengkap" required style="width: 98%; padding: 8px;">
+        </p>
+        <p>
+            <label for="nisn">NISN:</label><br>
+            <input type="text" id="nisn" name="nisn" required style="width: 98%; padding: 8px;">
+        </p>
+        <p>
+            <label for="tempat_lahir">Tempat Lahir:</label><br>
+            <input type="text" id="tempat_lahir" name="tempat_lahir" required style="width: 98%; padding: 8px;">
+        </p>
+        <p>
+            <label for="tanggal_lahir">Tanggal Lahir:</label><br>
+            <input type="date" id="tanggal_lahir" name="tanggal_lahir" required style="width: 98%; padding: 8px;">
+        </p>
+        <p>
+            <label for="jenis_kelamin">Jenis Kelamin:</label><br>
+            <select id="jenis_kelamin" name="jenis_kelamin" required style="width: 100%; padding: 8px;">
+                <option value="">-- Pilih Jenis Kelamin --</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+            </select>
+        </p>
+        <p>
+            <label for="agama">Agama:</label><br>
+            <input type="text" id="agama" name="agama" required value="Islam" style="width: 98%; padding: 8px;">
+        </p>
+        <p>
+            <label for="alamat">Alamat Lengkap:</label><br>
+            <textarea id="alamat" name="alamat" required rows="4" style="width: 98%; padding: 8px;"></textarea>
+        </p>
+        <p>
+            <label for="sekolah_asal">Sekolah Asal:</label><br>
+            <input type="text" id="sekolah_asal" name="sekolah_asal" required style="width: 98%; padding: 8px;">
+        </p>
+        
+        <h3>Data Orang Tua</h3>
+        <p>
+            <label for="nama_ayah">Nama Ayah:</label><br>
+            <input type="text" id="nama_ayah" name="nama_ayah" required style="width: 98%; padding: 8px;">
+        </p>
+        <p>
+            <label for="telepon_ayah">Nomor Telepon Ayah:</label><br>
+            <input type="tel" id="telepon_ayah" name="telepon_ayah" required style="width: 98%; padding: 8px;">
+        </p>
+        <p>
+            <label for="nama_ibu">Nama Ibu:</label><br>
+            <input type="text" id="nama_ibu" name="nama_ibu" required style="width: 98%; padding: 8px;">
+        </p>
+        <p>
+            <label for="telepon_ibu">Nomor Telepon Ibu:</label><br>
+            <input type="tel" id="telepon_ibu" name="telepon_ibu" required style="width: 98%; padding: 8px;">
+        </p>
+        
+        <hr>
+        <button type="submit" style="width: 100%; padding: 12px; font-size: 16px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Daftar Sekarang
+        </button>
+    </form>
+</div>
